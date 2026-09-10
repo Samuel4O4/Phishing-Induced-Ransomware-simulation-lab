@@ -1,544 +1,208 @@
-# Phishing-Induced Ransomware Attack & Detection Lab
+# Phishing-Induced Ransomware — SOC Detection & Investigation Lab
 
-![Cybersecurity](https://img.shields.io/badge/Focus-SOC%20%7C%20Detection%20%7C%20Incident%20Response-blue)
-![Environment](https://img.shields.io/badge/Environment-Isolated%20Lab-green)
-![SIEM](https://img.shields.io/badge/SIEM-Elastic%20Stack-orange)
-![Network Analysis](https://img.shields.io/badge/Network-Wireshark-blue)
+![Status](https://img.shields.io/badge/status-completed-brightgreen)
+![Environment](https://img.shields.io/badge/environment-home%20lab-blue)
+![Stack](https://img.shields.io/badge/stack-Elastic%20%7C%20Wireshark%20%7C%20GoPhish-orange)
 
-## ⚠️ Disclaimer
-
-This project was conducted strictly within a controlled home laboratory environment for educational and defensive security purposes only.
-
-All attack simulations were performed against virtual machines owned and managed by the author. No real users, organizations, or production systems were involved.
-
-The techniques demonstrated in this project are intended to help SOC analysts, incident responders, and defenders understand attacker behavior and improve detection and response capabilities.
-
-This work must not be used for illegal activities or unauthorized access to systems.
+> ## ⚠️ **Disclaimer**
+> This project was conducted strictly within a controlled home lab environment for educational and defensive security purposes only. All attack simulations were performed on virtual machines owned and managed by the author. No real users, organizations, or production systems were involved.
+>
+> The techniques demonstrated in this report are intended solely to help SOC analysts, incident responders, and defenders understand attacker behavior in order to improve detection and response capabilities.
+>
+> **This work must not be used for illegal activities or unauthorized access to systems.**
 
 ---
 
-## 📌 Project Overview
+## Table of Contents
 
-This project demonstrates the **detection and investigation of a simulated phishing-driven ransomware incident** from a SOC analyst perspective.
-
-The scenario represents a realistic attack chain in which a phishing email delivers a malicious executable to a victim workstation. After execution, the simulated ransomware performs destructive file operations, including file encryption and attempts to remove Volume Shadow Copies.
-
-The primary focus of this project is **defensive security**:
-
-* Understanding attacker behavior
-* Identifying relevant security telemetry
-* Analyzing network traffic
-* Investigating endpoint activity
-* Developing and validating detection logic
-* Mapping observed behavior to MITRE ATT&CK
-* Performing incident response and containment
-
----
-
-## 🎯 Objectives
-
-The main objectives of this lab were to:
-
-* Simulate a realistic phishing-based initial access scenario
-* Generate endpoint and network telemetry from ransomware activity
-* Analyze malicious network traffic using Wireshark
-* Investigate Windows security events using Elastic
-* Detect ransomware-related behavior using a custom detection rule
-* Identify attempts to delete Volume Shadow Copies
-* Build an incident timeline
-* Map observed behavior to MITRE ATT&CK
-* Practice SOC investigation and incident-response methodology
+- [Overview](#1-overview)
+- [Simulation Roles Overview](#2-simulation-roles-overview)
+- [Lab Environment & Tools](#3-lab-environment--tools)
+- [🔴 Attacker Simulation](#-attacker-simulation)
+  - [1. Creating the Ransomware Payload](#1-creating-ransomware-payload)
+  - [2. Phishing Scenario](#2-phishing-scenario)
+  - [3. Payload Hosting and Delivery](#3-payload-hosting-and-delivery)
+  - [4. Payload Execution](#4-payload-execution)
+- [🔵 SOC Analyst Investigation](#-soc-analyst-investigation)
+  - [1. Initial Security Posture Assessment](#1-initial-security-posture-assessment)
+  - [2. Network Traffic Analysis](#2-network-traffic-analysis)
+  - [3. Host-Based Investigation](#3-host-based-investigation)
+  - [4. MITRE ATT&CK Mapping](#4-mitre-attck-mapping)
 
 ---
 
-## 🏗️ Lab Architecture
+## 1. Overview
 
-The lab was built using isolated virtual machines.
+This report documents a **defensive security (SOC) learning exercise** focused on detecting and investigating a simulated phishing-driven ransomware incident using the **Elastic Stack**. The objective is not to develop or deploy malware, but to **understand attacker behavior at a high level** so that effective detection, triage, and response can be performed as a SOC analyst.
 
-```text
-                         ┌──────────────────────┐
-                         │    Attacker VM       │
-                         │      Kali Linux      │
-                         │                      │
-                         │  GoPhish             │
-                         │  Python HTTP Server  │
-                         └──────────┬───────────┘
-                                    │
-                         Phishing / HTTP Download
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │     Victim VM        │
-                         │     Windows 10       │
-                         │                      │
-                         │  Malicious Payload   │
-                         │  File Encryption     │
-                         └──────────┬───────────┘
-                                    │
-                          Security Telemetry
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │    Elastic Stack     │
-                         │                      │
-                         │  Detection           │
-                         │  Investigation       │
-                         │  Event Analysis      │
-                         └──────────────────────┘
-
-                         ┌──────────────────────┐
-                         │      Wireshark       │
-                         │  Network Analysis    │
-                         └──────────────────────┘
-```
+The scenario simulates a common real-world threat: a phishing email leading to malicious file execution on a user workstation, followed by ransomware activity. The exercise emphasizes **incident detection, investigation mindset, and response strategy.**
 
 ---
 
-## 🧪 Environment & Tools
+## 2. Simulation Roles Overview
 
-### Virtual Machines
+### 🔴 Attacker Simulation
 
-| Component            | Platform      |
-| -------------------- | ------------- |
-| Attacker Simulation  | Kali Linux    |
-| Victim Workstation   | Windows 10    |
-| SIEM / Investigation | Elastic Stack |
+The attacker simulation represents a controlled emulation of common threat actor techniques used to understand how real-world attacks manifest in logs and alerts. Its purpose is to generate realistic telemetry that a SOC analyst would be expected to detect and investigate.
 
-### Tools
+**Primary Goals:**
+- Creating the ransomware payload
+- Simulating a realistic phishing email containing a malicious payload
+- Delivering the payload to the victim machine
 
-* **GoPhish** — Phishing campaign simulation
-* **Python** — Controlled ransomware behavior simulation
-* **PyInstaller / Auto PY to EXE** — Executable packaging
-* **Python HTTP Server** — Payload hosting
-* **Wireshark** — Network traffic analysis
-* **Elasticsearch / Elastic Stack** — Security log analysis and detection
-* **MITRE ATT&CK** — Adversary behavior mapping
+### 🔵 SOC Analyst Investigation
 
----
+The SOC analyst investigation represents the **defender's perspective after compromise**. This role focuses on alert validation, investigation, impact assessment, and containment planning using the Elastic Stack. The emphasis is on visibility, correlation, and incident response rather than attack execution.
 
-# 🔴 Attack Simulation
-
-## 1. Ransomware Payload Simulation
-
-A controlled Python-based ransomware simulation was created to generate realistic endpoint telemetry.
-
-The simulation targeted a predefined laboratory directory:
-
-```text
-C:\ImportantFiles
-```
-
-The simulated behavior included:
-
-* Identifying selected file types
-* Generating a unique symmetric encryption key
-* Encrypting files using the Fernet algorithm
-* Renaming encrypted files
-* Attempting to remove Volume Shadow Copies
-* Displaying a simulated ransom notification
-
-The payload was packaged as a Windows executable for the purpose of reproducing a realistic execution scenario inside the isolated lab.
-
-> **Note:** The repository focuses on the defensive investigation and telemetry generated by the simulation rather than providing deployable ransomware.
+**Primary Goals:**
+- Detect malicious activity using Elastic & Wireshark
+- Investigate endpoint behavior and timelines
+- Assess impact and prevent further spread
 
 ---
 
-## 2. Phishing Simulation
+## 3. Lab Environment & Tools
 
-A phishing campaign was created using **GoPhish**.
+### 🧪 Lab Environment
 
-The scenario simulated a financial institution sending a transaction-report email to a fictional HR employee.
+The simulation was conducted using two virtual machines configured in an isolated lab environment:
 
-### Attack Flow
+| Role | Machine |
+|------|---------|
+| Attacker Machine | Kali Linux |
+| Victim Machine | Windows 10 |
 
-```text
-Phishing Email
-      ↓
-User Interaction
-      ↓
-Malicious File Download
-      ↓
-Payload Execution
-      ↓
-Ransomware Activity
-```
+### 🛠 Tools Used
 
-The phishing email was designed to demonstrate how social engineering can be combined with malicious file delivery.
-
-The landing page functionality was not used because the objective was **malicious file delivery rather than credential harvesting**.
+| Tool | Purpose |
+|------|---------|
+| PyInstaller | Converting Python file to executable |
+| GoPhish | Phishing campaign simulation |
+| Python HTTP Server | Payload hosting |
+| Wireshark | Traffic analysis |
+| Elasticsearch | Log ingestion and SOC investigation |
 
 ---
 
-## 3. Payload Delivery
+## 🔴 Attacker Simulation
 
-A lightweight Python HTTP server was used to host the simulated malicious executable.
+### 1. Creating Ransomware Payload
 
-The download link was embedded within the phishing email.
+A Python script was created to simulate realistic ransomware behavior targeting a predefined directory.
 
-After the victim interacted with the email, the Windows workstation generated HTTP traffic associated with the file download.
+**Payload Development**
 
-This created network telemetry that could subsequently be investigated using Wireshark.
+The script performed the following actions:
+- Targeted a specific folder (`C:\ImportantFiles`)
+- Deleted shadow copies
+- Identified files based on selected extensions (`.txt`, `.docx`, `.pdf`, `.jpg`, `.png`)
+- Generated a unique symmetric encryption key using the `Fernet` algorithm
+- Encrypted the contents of targeted files
+- Renamed encrypted files by appending the `.encrypted` extension
+- Displayed a graphical ransom notification
 
----
+**Conversion to Executable Format**
 
-## 4. Payload Execution
+The Python ransomware script was converted into a standalone Windows executable (`.exe`) using **Auto Py to Exe (PyInstaller)** to enable execution without requiring a Python interpreter.
 
-The victim executed the downloaded executable believing it to be a legitimate financial document.
+To simulate realistic attacker tradecraft:
+- The executable was renamed to resemble a legitimate financial transaction report.
+- A PDF-style icon was assigned to increase credibility.
 
-The simulated ransomware then generated observable behavior including:
-
-```text
-Executable Execution
-       ↓
-File Enumeration
-       ↓
-File Access
-       ↓
-File Encryption
-       ↓
-File Renaming
-       ↓
-Shadow Copy Deletion Attempt
-```
+This approach demonstrates how adversaries combine payload packaging with social engineering techniques to increase the likelihood of user execution.
 
 ---
 
-# 🔵 SOC Investigation
+### 2. Phishing Scenario
 
-## 1. Security Posture Assessment
+A phishing email was simulated to impersonate a financial institution (**Apex Bank**) and sent to a fictional employee (**Bob Smith – HR Department**). The email content socially engineered the victim into downloading what appeared to be a legitimate financial report.
 
-Before investigating the attack, the victim workstation's security posture was assessed.
+**Phishing Infrastructure and Campaign Setup**
 
-The laboratory configuration contained several weaknesses:
+GoPhish was used as the phishing framework. The configuration followed a standard workflow to mirror how phishing campaigns are commonly executed.
 
-* Windows Defender was disabled
-* Windows Firewall was disabled
-* File extensions were hidden
-* The user relied heavily on the displayed file icon to determine file legitimacy
-
-This configuration helped demonstrate how basic security controls and user awareness can influence the success of phishing-based attacks.
-
----
-
-## 2. Network Traffic Analysis
-
-Wireshark was used to investigate network activity surrounding the phishing event.
-
-### Findings
-
-The investigation identified:
-
-* Outbound HTTP communication from the victim workstation
-* A file download shortly after the phishing interaction
-* An HTTP `GET` request associated with retrieval of the executable
-* Communication between the victim workstation and the attacker simulation host
-
-### Investigation Flow
-
-```text
-Phishing Interaction
-        ↓
-HTTP Connection
-        ↓
-HTTP GET Request
-        ↓
-Executable Download
-        ↓
-Local Execution
-```
-
-### Conclusion
-
-The network evidence established a relationship between the phishing interaction and the subsequent malicious file download.
+- **Sending Profile Configuration** — A sending profile was configured to define the email delivery parameters (sender name, email address, and SMTP configuration). This step establishes how the phishing email appears to the recipient and is critical for generating realistic email telemetry.
+- **Email Template Creation** — An email template was created to reflect a legitimate bank communication. The content referenced a yearly transaction report and included a download prompt designed to encourage user interaction.
+- **Landing Page Configuration (Not Used)** — A landing page was created as part of the standard GoPhish workflow; however, it was not used in this scenario, as the objective was direct file download rather than credential harvesting.
+- **Users and Groups Setup** — The target user (Bob Smith) was added under Users & Groups. This represents a typical enterprise user account within the HR department and allows campaign tracking at the individual level.
+- **Campaign Launch** — After completing the configuration, a phishing campaign was created and launched. This action initiated email delivery to the target user and marked the start of the simulated attack timeline.
 
 ---
 
-# 🔎 3. Host-Based Investigation
+### 3. Payload Hosting and Delivery
 
-Following the network investigation, endpoint telemetry was analyzed using Elastic.
+To host the simulated malicious file, a lightweight Python HTTP server was activated on the attacker simulation machine. The file download URL was embedded directly into the phishing email body.
 
-Several Windows Security Event IDs were observed at high frequency within a short period:
+Once the URL was embedded and validated, the phishing campaign was sent successfully.
 
-| Event ID | Description                             |
-| -------- | --------------------------------------- |
-| 4656     | A handle to an object was requested     |
-| 4658     | The handle to an object was closed      |
-| 4663     | An attempt was made to access an object |
-
-The events showed repeated access to multiple files within the victim directory.
-
-A high volume of file-access activity occurring within a short time window is an important behavioral indicator when investigating potential ransomware activity.
-
-### Observed Pattern
-
-```text
-File Access
-    ↓
-File Modification
-    ↓
-Repeated Activity
-    ↓
-Multiple Files
-    ↓
-Short Time Window
-```
-
-This behavior provided additional evidence supporting the ransomware hypothesis.
+When the recipient clicked the download link, the file was retrieved from the hosted server, emulating a common real-world phishing delivery mechanism where payloads are hosted externally.
 
 ---
 
-# 🚨 4. Detection Engineering
+### 4. Payload Execution
 
-A custom Elastic detection rule was used to identify attempts to delete **Volume Shadow Copies**.
+The victim downloads the file, believing it to be a legitimate bank transaction report.
 
-Volume Shadow Copies can provide a mechanism for recovering previous versions of files. Attackers may attempt to remove them during ransomware attacks to make recovery more difficult.
-
-The detection rule generated an alert shortly after execution of the simulated malicious payload.
-
-### Detection Flow
-
-```text
-Malicious Execution
-        ↓
-Shadow Copy Deletion Attempt
-        ↓
-Windows Telemetry
-        ↓
-Elastic Detection Rule
-        ↓
-SOC Alert
-        ↓
-Investigation
-```
-
-This demonstrated the value of combining **behavior-based detection** with endpoint telemetry rather than relying exclusively on file signatures.
+Upon execution, the disguised executable runs the ransomware payload, resulting in immediate file encryption, deletion of the shadow copies, and presentation of the ransom notification.
 
 ---
 
-# 🧭 5. Incident Timeline
+## 🔵 SOC Analyst Investigation
 
-The simulated incident can be summarized as follows:
+### 1. Initial Security Posture Assessment
 
-```text
-1. Phishing Email Sent
-          ↓
-2. Victim Receives Email
-          ↓
-3. Victim Opens Email
-          ↓
-4. Malicious File Downloaded
-          ↓
-5. Malicious Executable Executed
-          ↓
-6. Ransomware Behavior Begins
-          ↓
-7. Shadow Copy Deletion Attempt
-          ↓
-8. Multiple Files Accessed
-          ↓
-9. Files Encrypted
-          ↓
-10. Elastic Detection Triggered
-          ↓
-11. SOC Investigation Begins
-          ↓
-12. Containment & Recovery
-```
+Before beginning technical analysis, an assessment of the victim's security posture was conducted.
+
+The investigation revealed significant user-side weaknesses:
+- Windows Defender was manually disabled.
+- The Windows Firewall was turned off.
+- The victim relied solely on file icon and visible extension to determine file legitimacy.
+- File extensions were hidden, causing a malicious executable (`.exe`) to appear as a benign PDF document.
+
+This lack of basic security awareness directly enabled the successful execution of the malicious payload.
 
 ---
 
-# 🛡️ 6. Incident Response
+### 2. Network Traffic Analysis
 
-The investigation follows a standard incident-response approach.
+As an initial investigation step, network traffic was analyzed using **Wireshark** to identify suspicious activity related to the phishing campaign.
 
-### Identification
+**Findings**
+- Identified outbound HTTP traffic from the victim machine to an external host.
+- Observed a file download request initiated shortly after the phishing email interaction.
+- HTTP GET request indicated retrieval of an executable file disguised as a transaction report.
 
-* Validate the security alert
-* Identify the affected workstation
-* Review process and file activity
-* Analyze network connections
-* Determine whether ransomware behavior occurred
+**Conclusion**
 
-### Containment
-
-Potential containment actions include:
-
-* Isolating the affected workstation from the network
-* Blocking malicious network communication
-* Preventing further execution of the payload
-* Identifying other potentially affected systems
-
-### Eradication
-
-* Remove the malicious payload
-* Identify and remove persistence mechanisms if present
-* Restore security controls
-* Verify that malicious processes are no longer running
-
-### Recovery
-
-* Restore affected files from clean backups
-* Validate system integrity
-* Re-enable endpoint security controls
-* Monitor the workstation for recurring suspicious activity
-
-### Lessons Learned
-
-The incident demonstrates the importance of:
-
-* Email security controls
-* Endpoint protection
-* Network monitoring
-* File-extension visibility
-* User security awareness
-* Centralized logging
-* Behavioral detection
-* Reliable offline backups
-* Rapid endpoint isolation
+Network evidence confirms successful delivery and download of the malicious file following phishing email engagement.
 
 ---
 
-# 🧩 7. MITRE ATT&CK Mapping
+### 3. Host-Based Investigation
 
-The observed behaviors were mapped to the **MITRE ATT&CK Framework** to provide a standardized representation of the simulated attack chain.
+Following network confirmation, host-level investigation was conducted using **Elasticsearch**.
 
-| Attack Stage     | Observed Behavior              | MITRE ATT&CK      |
-| ---------------- | ------------------------------ | ----------------- |
-| Initial Access   | Phishing email                 | T1566             |
-| Execution        | Malicious executable execution | T1204 / T1204.002 |
-| Impact           | File encryption                | T1486             |
-| Inhibit Recovery | Shadow Copy deletion           | T1490             |
+- During log review, Event IDs **4656** (Handle Requested), **4658** (Handle Closed), and **4663** (Attempt to Access an Object) were observed in high frequency against multiple user files within a short time window.
 
-> The mapping represents the behavior observed within this specific laboratory simulation.
+This pattern is consistent with ransomware behavior, where files are opened, modified, and rewritten during encryption.
 
----
+- More importantly, an alert was triggered by a custom detection rule previously developed in the author's Detection Engineering Lab.
+  > See related work: [Elastic Detection Engineering](https://app.notion.com/p/Elastic-Detection-Engineering-2dad295dbf4380c18b18f9a8951112db?pvs=21)
+- The rule is designed to detect attempts to delete **Volume Shadow Copies**, a common ransomware technique used to inhibit recovery.
 
-# 📊 Detection & Investigation Highlights
-
-This project demonstrates several practical SOC capabilities:
-
-### Network Analysis
-
-* HTTP traffic analysis
-* File download investigation
-* Identification of suspicious network activity
-* Packet-level investigation using Wireshark
-
-### Endpoint Investigation
-
-* Windows Security Event analysis
-* File-access activity investigation
-* Behavioral analysis
-* Timeline reconstruction
-
-### Detection Engineering
-
-* Custom Elastic detection rule
-* Ransomware behavior detection
-* Shadow Copy deletion detection
-* Alert validation
-
-### Incident Response
-
-* Alert triage
-* Incident investigation
-* Impact assessment
-* Containment planning
-* Recovery strategy
+The alert fired immediately after execution of the malicious payload, confirming shadow copy manipulation behavior.
 
 ---
 
-# 📁 Repository Structure
+### 4. MITRE ATT&CK Mapping
 
-```text
-phishing-ransomware-soc-lab/
-│
-├── README.md
-│
-├── attack-simulation/
-│   ├── phishing/
-│   ├── payload/
-│   └── delivery/
-│
-├── detection/
-│   ├── elastic/
-│   └── wireshark/
-│
-├── investigation/
-│   ├── timeline.md
-│   ├── network-analysis.md
-│   └── host-analysis.md
-│
-├── incident-response/
-│   ├── containment.md
-│   ├── eradication.md
-│   └── recovery.md
-│
-├── mitre/
-│   └── attack-mapping.md
-│
-├── architecture/
-│   └── lab-architecture.png
-│
-└── screenshots/
-```
+To standardize the analysis and align the incident with industry frameworks, the observed behaviors were mapped using the **MITRE ATT&CK Framework**.
 
 ---
 
-# 🎓 Key Takeaways
+## 🎯 Key Takeaways
 
-This lab provided hands-on experience with a complete simulated attack-and-defense lifecycle:
-
-```text
-Attack Simulation
-       ↓
-Telemetry Generation
-       ↓
-Detection
-       ↓
-Investigation
-       ↓
-Threat Identification
-       ↓
-Incident Response
-       ↓
-Recovery
-```
-
-The most important lesson from the project was that effective SOC operations require understanding **both attacker behavior and defender visibility**.
-
-Rather than simply identifying that ransomware occurred, the investigation focused on answering:
-
-* **How did the attack begin?**
-* **What did the attacker execute?**
-* **What evidence was generated?**
-* **What happened on the endpoint?**
-* **What network activity occurred?**
-* **How could the behavior be detected?**
-* **What actions should a SOC analyst take?**
-
----
-
-## 🚀 Future Improvements
-
-Potential extensions to this lab include:
-
-* Integrating Sysmon for richer endpoint telemetry
-* Building additional Elastic detection rules
-* Creating automated alert enrichment
-* Integrating threat intelligence
-* Adding automated incident-response workflows
-* Implementing SOAR automation using **n8n**
-* Simulating lateral movement in a controlled environment
-* Adding additional ransomware detection techniques
-* Creating automated IOC extraction and reporting
-
----
-
-## 👨‍💻 Author
-
-**Samuel Adham**
-
-Cybersecurity Enthusiast | SOC Analyst | Detection & Incident Response
-
-This project was created as part of a hands-on cybersecurity learning journey focused on understanding attacker behavior and developing practical defensive security skills.
+- Disabled endpoint protections (Defender, Firewall) combined with hidden file extensions significantly lowered the barrier for successful phishing-based compromise.
+- Network-layer visibility (Wireshark) and host-layer visibility (Elastic/Windows Event Logs) together provided full-chain evidence of the attack, from delivery to impact.
+- Custom detection engineering — specifically a rule targeting Volume Shadow Copy deletion — enabled near-immediate alerting on ransomware behavior.
+- Mapping the incident to MITRE ATT&CK helps standardize reporting and supports building future detections around the same tactics and techniques.
