@@ -58,8 +58,7 @@ The SOC analyst investigation represents the **defender's perspective after comp
 - Detect malicious activity using Elastic & Wireshark
 - Investigate endpoint behavior and timelines
 - Assess impact and prevent further spread
-
----
+<img width="1774" height="887" alt="Architecture" src="https://github.com/user-attachments/assets/98d51fd4-bb78-4601-aea9-f1ada80db75a" />
 
 ## 3. Lab Environment & Tools
 
