@@ -1,4 +1,3 @@
-# Phishing-Induced Ransomware — SOC Detection & Investigation Lab
 
 ![Status](https://img.shields.io/badge/status-completed-brightgreen)
 ![Environment](https://img.shields.io/badge/environment-home%20lab-blue)
@@ -123,10 +122,22 @@ A phishing email was simulated to impersonate a financial institution (**Apex Ba
 GoPhish was used as the phishing framework. The configuration followed a standard workflow to mirror how phishing campaigns are commonly executed.
 
 - **Sending Profile Configuration** — A sending profile was configured to define the email delivery parameters (sender name, email address, and SMTP configuration). This step establishes how the phishing email appears to the recipient and is critical for generating realistic email telemetry.
+
+  <img width="1920" height="1080" alt="1" src="https://github.com/user-attachments/assets/5322c8d9-5766-4743-b6c9-c42de3803993" />
+
 - **Email Template Creation** — An email template was created to reflect a legitimate bank communication. The content referenced a yearly transaction report and included a download prompt designed to encourage user interaction.
+
+  <img width="1718" height="843" alt="2" src="https://github.com/user-attachments/assets/692a0d6c-76f2-43d9-830c-17f01af9665f" />
+
 - **Landing Page Configuration (Not Used)** — A landing page was created as part of the standard GoPhish workflow; however, it was not used in this scenario, as the objective was direct file download rather than credential harvesting.
+
 - **Users and Groups Setup** — The target user (Bob Smith) was added under Users & Groups. This represents a typical enterprise user account within the HR department and allows campaign tracking at the individual level.
+
+  <img width="1718" height="878" alt="3" src="https://github.com/user-attachments/assets/e11cce3d-b6b8-4913-965e-f50b108fa49d" />
+
 - **Campaign Launch** — After completing the configuration, a phishing campaign was created and launched. This action initiated email delivery to the target user and marked the start of the simulated attack timeline.
+
+  <img width="1718" height="878" alt="4" src="https://github.com/user-attachments/assets/12c74b11-0d89-4f29-9c5f-123f60c42364" />
 
 ---
 
@@ -177,6 +188,9 @@ As an initial investigation step, network traffic was analyzed using **Wireshark
 - Identified outbound HTTP traffic from the victim machine to an external host.
 - Observed a file download request initiated shortly after the phishing email interaction.
 - HTTP GET request indicated retrieval of an executable file disguised as a transaction report.
+  
+  
+
 
 **Conclusion**
 
