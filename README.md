@@ -27,6 +27,8 @@
   - [2. Network Traffic Analysis](#2-network-traffic-analysis)
   - [3. Host-Based Investigation](#3-host-based-investigation)
   - [4. MITRE ATT&CK Mapping](#4-mitre-attck-mapping)
+- [📂 Attached Files](#-attached-files)
+- [🎯 Key Takeaways](#-key-takeaways)
 
 ---
 
