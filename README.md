@@ -189,8 +189,8 @@ As an initial investigation step, network traffic was analyzed using **Wireshark
 - Observed a file download request initiated shortly after the phishing email interaction.
 - HTTP GET request indicated retrieval of an executable file disguised as a transaction report.
   
-  
-
+  <img width="1918" height="1015" alt="Screenshot 2026-02-23 134823" src="https://github.com/user-attachments/assets/4bd09ad0-8830-40d6-9f2e-08d6594ca978" />
+  <img width="1330" height="374" alt="Screenshot 2026-02-23 134342" src="https://github.com/user-attachments/assets/db1a7d54-457b-4288-b98d-2119946ed2bf" />
 
 **Conclusion**
 
@@ -206,17 +206,16 @@ Following network confirmation, host-level investigation was conducted using **E
 
 This pattern is consistent with ransomware behavior, where files are opened, modified, and rewritten during encryption.
 
-- More importantly, an alert was triggered by a custom detection rule previously developed in the author's Detection Engineering Lab.
-  > See related work: [Elastic Detection Engineering](https://app.notion.com/p/Elastic-Detection-Engineering-2dad295dbf4380c18b18f9a8951112db?pvs=21)
-- The rule is designed to detect attempts to delete **Volume Shadow Copies**, a common ransomware technique used to inhibit recovery.
-
-The alert fired immediately after execution of the malicious payload, confirming shadow copy manipulation behavior.
+<img width="1919" height="912" alt="Ransom" src="https://github.com/user-attachments/assets/a065c820-43dd-4997-a435-3619ea54b8e5" />
 
 ---
 
 ### 4. MITRE ATT&CK Mapping
 
 To standardize the analysis and align the incident with industry frameworks, the observed behaviors were mapped using the **MITRE ATT&CK Framework**.
+
+
+
 
 ---
 
