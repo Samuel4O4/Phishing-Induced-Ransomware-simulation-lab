@@ -226,7 +226,7 @@ The following files are included in this repository as part of the simulated att
 
 | File                                         | Description                                                                                              |
 | -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| [`Encryptor.py`](Encryptor.py)               | Python script used to simulate the ransomware encryption behavior within the controlled lab environment. |
+| [`Encryptor.py`](Payloads\Encryptor.py)               | Python script used to simulate the ransomware encryption behavior within the controlled lab environment. |
 | [`decryptor.py`](decryptor.py)               | Python script used to decrypt the files encrypted during the laboratory simulation.                      |
 | [`Phishing mail.html`](Phishing%20mail.html) | HTML file containing the simulated phishing email used in the attack scenario.                           |
 
