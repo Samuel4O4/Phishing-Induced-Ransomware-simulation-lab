@@ -218,9 +218,22 @@ To standardize the analysis and align the incident with industry frameworks, the
 
 ---
 
+## 📂 Attached Files
+
+The following files are included in this repository as part of the simulated attack and phishing scenario:
+
+| File                                         | Description                                                                                              |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [`Encryptor.py`](Encryptor.py)               | Python script used to simulate the ransomware encryption behavior within the controlled lab environment. |
+| [`decryptor.py`](decryptor.py)               | Python script used to decrypt the files encrypted during the laboratory simulation.                      |
+| [`Phishing mail.html`](Phishing%20mail.html) | HTML file containing the simulated phishing email used in the attack scenario.                           |
+
+> ⚠️ **Important:** These files were created and used strictly within the controlled laboratory environment described in this project. They are provided for educational and defensive security research purposes only.
+
+---
+
 ## 🎯 Key Takeaways
 
 - Disabled endpoint protections (Defender, Firewall) combined with hidden file extensions significantly lowered the barrier for successful phishing-based compromise.
 - Network-layer visibility (Wireshark) and host-layer visibility (Elastic/Windows Event Logs) together provided full-chain evidence of the attack, from delivery to impact.
-- Custom detection engineering — specifically a rule targeting Volume Shadow Copy deletion — enabled near-immediate alerting on ransomware behavior.
 - Mapping the incident to MITRE ATT&CK helps standardize reporting and supports building future detections around the same tactics and techniques.
