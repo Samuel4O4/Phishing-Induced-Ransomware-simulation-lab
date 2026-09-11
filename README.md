@@ -148,6 +148,9 @@ The victim downloads the file, believing it to be a legitimate bank transaction 
 
 Upon execution, the disguised executable runs the ransomware payload, resulting in immediate file encryption, deletion of the shadow copies, and presentation of the ransom notification.
 
+<img width="1718" height="878" alt="Ransomware" src="https://github.com/user-attachments/assets/1a804ee5-8e3b-427a-aa65-31fbe07d613d" />
+<img width="3436" height="808" alt="files" src="https://github.com/user-attachments/assets/698e01e8-bd02-40db-ba2e-40f33cdd414f" />
+
 ---
 
 ## 🔵 SOC Analyst Investigation
