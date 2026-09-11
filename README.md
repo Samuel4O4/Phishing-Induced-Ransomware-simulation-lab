@@ -214,8 +214,7 @@ This pattern is consistent with ransomware behavior, where files are opened, mod
 
 To standardize the analysis and align the incident with industry frameworks, the observed behaviors were mapped using the **MITRE ATT&CK Framework**.
 
-
-
+<img width="2112" height="1632" alt="Mitre_Attack_Mapping_GitHub" src="https://github.com/user-attachments/assets/877a0e5a-da6c-4ae7-93b6-cfb9c5f0ae78" />
 
 ---
 
