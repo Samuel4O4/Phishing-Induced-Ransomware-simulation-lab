@@ -226,9 +226,9 @@ The following files are included in this repository as part of the simulated att
 
 | File | Description |
 |---|---|
-| [`Encryptor.py`](payloads/Encryptor.py) | Python script used to simulate the ransomware encryption behavior within the controlled lab environment. |
-| [`decryptor.py`](payloads/decryptor.py) | Python script used to decrypt the files encrypted during the laboratory simulation. |
-| [`Phishing mail.html`](payloads/Phishing%20mail.html) | HTML file containing the simulated phishing email used in the attack scenario. |
+| [`Encryptor.py`](Payloads/Encryptor.py) | Python script used to simulate the ransomware encryption behavior within the controlled lab environment. |
+| [`decryptor.py`](Payloads/decryptor.py) | Python script used to decrypt the files encrypted during the laboratory simulation. |
+| [`Phishing mail.html`](Payloads/Phishing%20mail.html) | HTML file containing the simulated phishing email used in the attack scenario. |
 
 > ⚠️ **Important:** These files were created and used strictly within the controlled laboratory environment described in this project. They are provided for educational and defensive security research purposes only.
 
