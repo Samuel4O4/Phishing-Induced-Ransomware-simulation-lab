@@ -110,6 +110,8 @@ To simulate realistic attacker tradecraft:
 
 This approach demonstrates how adversaries combine payload packaging with social engineering techniques to increase the likelihood of user execution.
 
+<img width="1718" height="878" alt="Python to EXE " src="https://github.com/user-attachments/assets/b73926cc-92de-4c22-9bba-6f8340b94693" />
+
 ---
 
 ### 2. Phishing Scenario
@@ -135,6 +137,8 @@ To host the simulated malicious file, a lightweight Python HTTP server was activ
 Once the URL was embedded and validated, the phishing campaign was sent successfully.
 
 When the recipient clicked the download link, the file was retrieved from the hosted server, emulating a common real-world phishing delivery mechanism where payloads are hosted externally.
+
+<img width="1862" height="905" alt="Phishing Mail" src="https://github.com/user-attachments/assets/72fbaed4-ff03-407e-afac-a0edf35fa6d2" />
 
 ---
 
